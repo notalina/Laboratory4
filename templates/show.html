@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+{% block title %}А вот{% endblock %}
+
+{% block head %}
+  {{ super() }}
+{% endblock %}
+
+{% block content %}
+<table class="table">
+    <th scope="col">name of the table</th>
+    {% for row in results %}
+        <tr>
+            <td scope="row">{{ row[0] }}</td>
+            <br>
+        </tr>
+    {% endfor %}
+<table>
+{% endblock %}
