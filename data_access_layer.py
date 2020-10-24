@@ -43,6 +43,9 @@ class dataAccessLayer:
         query = "DROP TABLE " + table + ';'
         print(query)
     
+    def alter_execute(self, table, ):
+
+    
 
 
 
