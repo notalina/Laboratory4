@@ -1,6 +1,6 @@
 import pymysql
 
-class dataAccessLayer:
+class sql_translator:
     #db = pymysql.connect("localhost", "flask_user", "flask_user", "flask_user", port=3306)
     def select_sql(self, columns, table, condition):
         query = "SELECT "
@@ -19,9 +19,9 @@ class dataAccessLayer:
         values_str = ",".join(values)
         return f"INSERT {table_name}({columns_names}) VALUES ( {values_str} );"
 
-    def update_sql(table_name: str, update_data: Dict, where = "1=1"):
+    def update_sql(self, table_name: str, update_data: dict, where = "1=1"):
         update_str_list = [f"{column}={value}" for column, value in update_data.items()]
-        update_expression = ", ".join(update_expression)
+        update_expression = ", ".join(update_str_list)
         return f"UPDATE {table_name} SET {update_expression} WHERE {where};"
     
     def drop_sql(self, table):
@@ -30,9 +30,9 @@ class dataAccessLayer:
     def alter_execute(self, table, condition):
         return f"ALTER TABLE {table} {condition}"
 
-    def create_sql(table_name: str, column_definitions: dict):
+    def create_sql(self, table_name: str, column_definitions: dict):
         update_str_list = [f"{column_name} {column_type}" for column_name,column_type in column_definitions.items()]
-        update_expression = ", ".join(update_expression)
+        update_expression = ", ".join(update_str_list)
         return f"CREATE TABLE {table_name} ({update_expression});"
 
 
