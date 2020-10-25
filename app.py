@@ -1,33 +1,54 @@
 import time
 from flask import Flask, render_template, request, redirect
 import pymysql 
-db = pymysql.connect("localhost", "flask_user", "flask_user", "flask_user", port=3306)
+from typing import Dict
+import sql_translator
+import data_access_layer
+
+_sql_translator = sql_translator.SqlTranslator()
+dal = data_access_layer.DataAccessLayer("localhost", 3306, "flask_user", "flask_user", "flask_user")
 app = Flask(__name__)
 
-@app.route('/', methods=["POST","GET"])
+
+@app.route('/')
 def start():
     return render_template('index.html')
 
-@app.route('/time')
-def tim():
-    t = time.ctime(time.time())
-    return render_template('time.html', current_time=t)
+@app.route('/create', method=["GET", "POST"])
+def create_table():
+    if request.method == 'GET':
+        return render_template('create_table.html')
+    elif request.method == 'POST':
+        _do_create_table(request.form)
 
-@app.route('/select')
-def selectTable():
-    cursor = db.cursor()
-    sql = "SELECT * FROM examples"
-    cursor.execute(sql)
-    results = cursor.fetchall()
-    return render_template('select.html', results=results)
+def _do_create_table(form_data: Dict):
+    table_name:str = form_data["table_name"]
+    column_names: list = form_data["column_names"]
+    column_types: list = form_data["column_types"]
+    column_definitions = {column_names[i]:column_types for i in range(len(column_names))}
+    query = _sql_translator.create_sql(table_name, column_definitions)
+    try:
+        dal.create(query)
+        return f"<h1 style='color:green'>The query '${query} executed'</h1>"
 
-@app.route('/show')
-def showTables():
-    cursor = db.cursor()
-    sql = "SHOW TABLES FROM flask_user"
-    cursor.execute(sql)
-    results = cursor.fetchall()
-    return render_template('show.html', results=results)
+    except BaseException as error:
+        return f"<h1 >{error}</h1>"
 
-# if __name__ == "__main__":
-#     app.run(debug=True)
+if __name__ == "__main__":
+    app.run(debug=True)
+
+"""
+<input type="text" name="column_names[]" value="comment1"/>
+<input type="text" name="column_names[]" value="comment2"/>
+<input type="text" name="column_names[]" value="comment3"/>
+<input type="text" name="column_names[]" value="comment4"/>
+
+
+<input type="text" name="column_types[]" value="comment1"/>
+<input type="text" name="column_types[]" value="comment2"/>
+<input type="text" name="column_types[]" value="comment3"/>
+<input type="text" name="column_types[]" value="comment4"/>
+
+https://www.postman.com/downloads/
+"""
+

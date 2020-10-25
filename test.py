@@ -1,13 +1,5 @@
-
-
 import sql_translator
 import data_access_layer
-
-# if __name__ == "__main__":
-#     dal = data_access_layer.DataAccessLayer("вот","тут","подключаемся","к","БД")
-#     # для теста можно и тут вызывать SqlTranslator
-#     sql = sql_translator.SqlTranslator()
-#     sql.select_sql("реальная таблица", [])
 
 def test_sql_select_tranlator():
     sql = sql_translator.SqlTranslator()
