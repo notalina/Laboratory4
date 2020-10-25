@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block title %}DROP TABLE{% endblock %}
+
+{% block head %}
+  {{ super() }}
+{% endblock %}
+
+{% block content %}
+<div>
+    <form id="drop_table_form" action="/drop" method="POST">
+        <div class="form-group">
+            <label for="tableName">Имя таблицы</label>
+            <input type="text" class="form-control" id="tableName" name="table_name" aria-describedby="emailHelp">
+        </div>
+        <div>
+            <button type="submit" class="btn btn-primary">Выполнить запрос</button>
+        </div
+        >
+    </form>
+</div>
+{% endblock %}

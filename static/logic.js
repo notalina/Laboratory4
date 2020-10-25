@@ -11,7 +11,7 @@
                 $(column_name_input).attr("name", `column_types[${index}]`);
                 $(column_type_input).attr("name", `column_types[${index}]`);
             });
-         
+
         })
     })
 }.call(this))

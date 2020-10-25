@@ -85,7 +85,7 @@ def _do_create_table(form_data: Dict):
         return handle_error(error)
 
 def _do_drop_table(form_data: str):
-    table_name:str = form_data
+    table_name:str = form_data["table_name"]
     query = _sql_translator.drop_sql(table_name)
     try:
         dal.drop(query)
@@ -156,26 +156,11 @@ def _do_insert(form_data: Dict):
 
 
 def handle_success(query):
-    return f"<h1 style='color:green'>The query '${query} executed'</h1>"
+    return render_template("success.html")
 
 def handle_error(error: BaseException):
     return f"<h1 >{error}</h1>"
 
 if __name__ == "__main__":
     app.run(debug=True)
-
-"""
-<input type="text" name="column_names[]" value="comment1"/>
-<input type="text" name="column_names[]" value="comment2"/>
-<input type="text" name="column_names[]" value="comment3"/>
-<input type="text" name="column_names[]" value="comment4"/>
-
-
-<input type="text" name="column_types[]" value="comment1"/>
-<input type="text" name="column_types[]" value="comment2"/>
-<input type="text" name="column_types[]" value="comment3"/>
-<input type="text" name="column_types[]" value="comment4"/>
-
-https://www.postman.com/downloads/
-"""
 
