@@ -56,7 +56,7 @@ def update_table():
 @app.route('/delete', methods=["GET", "POST"])
 def delete_table():
     if request.method == 'GET':
-        return render_template('delete_table.html')
+        return render_template('delete.html')
     elif request.method == 'POST':
         _do_delete(request.form)
 
