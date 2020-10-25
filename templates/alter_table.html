@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+
+{% block title %}DROP TABLE{% endblock %}
+
+{% block head %}
+  {{ super() }}
+{% endblock %}
+
+{% block content %}
+<div>
+    <form id="alter_table_form" action="/alter" method="POST">
+        <div class="form-group">
+            <label for="tableName">ALTER</label>
+            <input type="text" class="form-control" id="tableName" name="table_name" aria-describedby="emailHelp">
+        </div>
+        <div class="inputs">
+            <div class="row ">
+                <div class="col">
+                    <input type="text" class="form-control" name="condition" placeholder="Имя таблицы">
+                </div>
+                <div class="col">
+                    <input type="text" class="form-control" name="condition" placeholder="Условие">
+                </div>
+            </div>
+        <div>
+            <button type="submit" class="btn btn-primary">Выполнить запрос</button>
+        </div
+        >
+    </form>
+</div>
+{% endblock %}
