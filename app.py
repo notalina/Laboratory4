@@ -16,21 +16,21 @@ def start():
 
 #ddl
 
-@app.route('/create', method=["GET", "POST"])
+@app.route('/create', methods=["GET", "POST"])
 def create_table():
     if request.method == 'GET':
         return render_template('create_table.html')
     elif request.method == 'POST':
         _do_create_table(request.form)
 
-@app.route('/drop', method=["GET", "POST"])
+@app.route('/drop', methods=["GET", "POST"])
 def drop_table():
     if request.method == 'GET':
         return render_template('drop_table.html')
     elif request.method == 'POST':
         _do_drop_table(request.form)
 
-@app.route('/alter', method=["GET", "POST"])
+@app.route('/alter', methods=["GET", "POST"])
 def alter_table():
     if request.method == 'GET':
         return render_template('alter_table.html')
@@ -39,65 +39,69 @@ def alter_table():
 
 #dml
 
-@app.route('/select', method=["GET", "POST"])
+@app.route('/select', methods=["GET", "POST"])
 def select_table():
     if request.method == 'GET':
         return render_template('select_table.html')
     elif request.method == 'POST':
         _do_select(request.form)
 
-@app.route('/update', method=["GET", "POST"])
+@app.route('/update', methods=["GET", "POST"])
 def update_table():
     if request.method == 'GET':
         return render_template('update_table.html')
     elif request.method == 'POST':
         _do_update(request.form)
 
-@app.route('/delete', method=["GET", "POST"])
+@app.route('/delete', methods=["GET", "POST"])
 def delete_table():
     if request.method == 'GET':
         return render_template('delete_table.html')
     elif request.method == 'POST':
         _do_delete(request.form)
 
-@app.route('/insert', method=["GET", "POST"])
+@app.route('/insert', methods=["GET", "POST"])
 def insert_table():
     if request.method == 'GET':
         return render_template('insert_table.html')
     elif request.method == 'POST':
         _do_insert(request.form)
 
+#others
 
 def _do_create_table(form_data: Dict):
     table_name:str = form_data["table_name"]
-    column_names: list = form_data["column_names"]
-    column_types: list = form_data["column_types"]
-    column_definitions = {column_names[i]:column_types for i in range(len(column_names))}
+    column_amount = int(form_data["column_amount"])
+    column_definitions = {}
+    for i in range(column_amount):
+        column_name = form_data[f"column_names[{i}]"]
+        column_type = form_data[f"column_types[{i}]"]
+        column_definitions[column_name] = column_type
     query = _sql_translator.create_sql(table_name, column_definitions)
     try:
         dal.create(query)
-        return f"<h1 style='color:green'>The query '${query} executed'</h1>"
+        return handle_success(query)
     except BaseException as error:
-        return f"<h1 >{error}</h1>"
+        return handle_error(error)
 
 def _do_drop_table(form_data: str):
-    table_name:str = form_data;
+    table_name:str = form_data
     query = _sql_translator.drop_sql(table_name)
     try:
         dal.drop(query)
-        return f"<h1 style='color:green'>The query '${query} executed'</h1>"
+        return handle_success(query)
     except BaseException as error:
-        return f"<h1 >{error}</h1>"
+        return handle_error(error)
 
-def _do_alter_table(form_data: Dict)
+def _do_alter_table(form_data: Dict):
     table_name:str = form_data["table_name"]
-    column_names:str = form_data["condition"]
+    condition:str = form_data["condition"]
     query = _sql_translator.alter_sql(table_name, condition)
     try:
         dal.alter(query)
-        return f"<h1 style='color:green'>The query '${query} executed'</h1>"
+        return handle_success(query)
     except BaseException as error:
-        return f"<h1 >{error}</h1>"
+        return handle_error(error)
 
 def _do_select(form_data: Dict):
     table_name:str = form_data["table_name"]
@@ -111,7 +115,7 @@ def _do_select(form_data: Dict):
         result = dal.select(query)
         return render_template('select.html',results=result)
     except BaseException as error:
-        return f"<h1 >{error}</h1>"
+        return handle_error(error)
 
 def _do_update(form_data: Dict):
     table_name:str = form_data["table_name"]
@@ -125,9 +129,9 @@ def _do_update(form_data: Dict):
         query = _sql_translator.update_sql(table_name,update_data)
     try:
         dal.update(query)
-        return f"<h1 style='color:green'>The query '${query} executed'</h1>"
+        return handle_success(query)
     except BaseException as error:
-        return f"<h1 >{error}</h1>"
+        return handle_error(error)
 
 def _do_delete(form_data: Dict):
     table_name:str = form_data["table_name"]
@@ -135,9 +139,9 @@ def _do_delete(form_data: Dict):
     query = _sql_translator.delete_sql(table_name, condition)
     try:
         dal.delete(query)
-        return f"<h1 style='color:green'>The query '${query} executed'</h1>"
+        return handle_success(query)
     except BaseException as error:
-        return f"<h1 >{error}</h1>"
+        return handle_error(error)
 
 def _do_insert(form_data: Dict):
     table_name:str = form_data["table_name"]
@@ -146,9 +150,16 @@ def _do_insert(form_data: Dict):
     query = _sql_translator.insert_sql(table_name,columns,values)
     try:
         dal.insert(query)
-        return f"<h1 style='color:green'>The query '${query} executed'</h1>"
+        return handle_success(query)
     except BaseException as error:
-        return f"<h1 >{error}</h1>"
+        return handle_error(error)
+
+
+def handle_success(query):
+    return f"<h1 style='color:green'>The query '${query} executed'</h1>"
+
+def handle_error(error: BaseException):
+    return f"<h1 >{error}</h1>"
 
 if __name__ == "__main__":
     app.run(debug=True)
