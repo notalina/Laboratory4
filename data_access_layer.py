@@ -1,22 +1,14 @@
 import pymysql 
 
 class DataAccessLayer:
-    def init(self, db_host, dp_port, db_name, db_user, db_user_password):
+    def __init__(self, db_host, dp_port, db_name, db_user, db_user_password):
         self.db_host = db_host
         self.dp_port = dp_port
         self.db_name = db_name
         self.db_user = db_user
         self.db_user_password = db_user_password
         
-
-    # пишу пример с этим запросом пока, дальше сама по тренируйся
-    # плюс данного подхода что можно потестить не запуская браузер ща покажу как
     def get_connection(self):
-        """
-        Сделано по аналогии с документацией
-        https://pynative.com/python-mysql-database-connection/
-        на каждый запрос открываем соединение и закрываем после себя
-        """
         try: 
             connection = pymysql.connect(host=self.db_host, 
                                         port=self.dp_port,
@@ -59,9 +51,9 @@ class DataAccessLayer:
         try:
             connection = self.get_connection()
             with connection.cursor() as cursor:
-                cursor.execute(delete_quer)
+                cursor.execute(delete_query)
         except pymysql.MySQLError as e:
-            print(f"Error execute delete query {delete_quer} to MySQL", e)
+            print(f"Error execute delete query {delete_query} to MySQL", e)
             raise
         finally:
             connection.close()
