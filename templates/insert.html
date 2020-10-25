@@ -1,14 +1,13 @@
 {% extends "layout.html" %}
 
-{% block title %}SELECT{% endblock %}
+{% block title %}INSERT{% endblock %}
 
 {% block head %}
   {{ super() }}
 {% endblock %}
 
 {% block content %}
-
-<form action="/select" method="POST" id="selectFrom" class="m-b-20">
+<form action="/insert" method="POST" id="insert" class="m-b-20">
     <div class="form-group">
         <label for="tableNames">Имя таблицы</label>
         <select class="form-control" name="table_name" id="tableNames">
@@ -23,35 +22,12 @@
         <small id="columnsHelp" class="form-text text-muted">Можно указать несколько разделяя запятой</small>
     </div>
     <div class="form-group">
-        <label for="whereStatement">Условие</label>
-        <input type="text" class="form-control" name="condition" id="whereStatement">
+        <label for="values">Значения</label>
+        <input type="text" class="form-control" name="values" id="values">
         </input>
     </div>
     <button type="submit" class="btn btn-success p-t-10">Выполнить</button>
 </form>
-
-
-
-{% if sql_query is defined %}
-<br>
-<h3>Запрос</h3>
-<pre>{{sql_query}}</pre>
-{% endif %}
-{% if select_results is defined %}
-<br>
-    <table class="table table-stripped">
-        <tbody>
-            {% for row in select_results %}
-             <tr>
-                {% for column in row %}
-                <td>{{ column }}</td>
-                {% endfor %}
-             </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-{% endif %}
-
 
 <script type="text/javascript">
     $(document).ready(function(){

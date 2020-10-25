@@ -42,11 +42,6 @@ def alter_table():
 @app.route('/select', methods=["GET", "POST"])
 def select_table():
     if request.method == 'GET':
-#    по хорошему лучше юзеру дать инфу какие таблицы есть
-#    для этого можно сделать запрос и получить инфу о таблциах
-        # tables = {"table_name": ["table_column1", "table_column1", ]}
-        # по скольку мы рендерим имя таблицы только для гет запроса после пост запроса эти жанные теряются
-        # надо делать чутка иначе
         return render_template('select.html', **get_tables())
     elif request.method == 'POST':
         return _do_select(request.form)
@@ -54,7 +49,7 @@ def select_table():
 @app.route('/update', methods=["GET", "POST"])
 def update_table():
     if request.method == 'GET':
-        return render_template('update_table.html')
+        return render_template('update.html')
     elif request.method == 'POST':
         return _do_update(request.form)
 
@@ -68,7 +63,7 @@ def delete_table():
 @app.route('/insert', methods=["GET", "POST"])
 def insert_table():
     if request.method == 'GET':
-        return render_template('insert_table.html')
+        return render_template('insert.html',**get_tables())
     elif request.method == 'POST':
         return _do_insert(request.form)
 
@@ -162,7 +157,7 @@ def _do_delete(form_data: Dict):
 
 def _do_insert(form_data: Dict):
     table_name:str = form_data["table_name"]
-    columns:list = form_data["columns"]
+    columns:list = form_data["column_names"]
     values:list = form_data["values"]
     query = _sql_translator.insert_sql(table_name,columns,values)
     try:
