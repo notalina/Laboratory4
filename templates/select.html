@@ -7,16 +7,72 @@
 {% endblock %}
 
 {% block content %}
-<table class="table">
-    <th scope="col">id</th>
-    <th scope="col">name</th>
-    {% for row in results %}
-        <tr>
-            <td scope="row">{{ row[0] }}</td>
-            <td scope="row">{{ row[1] }}</td>
-            <br>
-        </tr>
-    {% endfor %}
-<table>
+<!-- Пока селектим все колонки -->
+<!-- m-b-20 это сокращение от margin-bottom: 20px эти правила за нас объявлены в бустрапе-->
+<form action="/select" method="POST" id="selectFrom" class="m-b-20">
+    <div class="form-group">
+        <label for="tableNames">Имя таблицы</label>
+        <select class="form-control" name="table_name" id="tableNames">
+            {% for table in table_names %}
+             <option>{{ table }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="columns">Колонки</label>
+        <input type="text" class="form-control" name="column_names" id="columns" value="*" placeholder="*"/>
+        <small id="columnsHelp" class="form-text text-muted">Можно указать несколько разделяя запятой</small>
+    </div>
+    <div class="form-group">
+        <label for="whereStatement">Условие</label>
+        <input type="text" class="form-control" name="condition" id="whereStatement">
+        </input>
+    </div>
+    <button type="submit" class="btn btn-success p-t-10">Выполнить</button>
+</form>
+
+
+
+{% if sql_query is defined %}
+<br>
+<h3>Запрос</h3>
+<pre>{{sql_query}}</pre>
+{% endif %}
+{% if select_results is defined %}
+<br>
+    <table class="table table-stripped">
+        <tbody>
+            {% for row in select_results %}
+             <tr>
+                {% for column in row %}
+                <td>{{ column }}</td>
+                {% endfor %}
+             </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        tableColumnMap = {
+            {% for table in table_columns %}
+                {{table}}: [
+                    {% for column_name in table_columns[table] %}
+                        "{{column_name}}",
+                    {% endfor %}
+                ],
+            {% endfor %}
+        }
+
+        $( "#tableNames").change(function () {
+            let selectedTableName = $("#tableNames option:selected").first().text()
+            let columns = tableColumnMap[selectedTableName];
+            $("#columns").attr("value",columns.join())
+        }).change()
+    })
+
+</script>
 
 {% endblock %}

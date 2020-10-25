@@ -21,53 +21,70 @@ def create_table():
     if request.method == 'GET':
         return render_template('create_table.html')
     elif request.method == 'POST':
-        _do_create_table(request.form)
+        return _do_create_table(request.form)
 
 @app.route('/drop', methods=["GET", "POST"])
 def drop_table():
     if request.method == 'GET':
         return render_template('drop_table.html')
     elif request.method == 'POST':
-        _do_drop_table(request.form)
+        return _do_drop_table(request.form)
 
 @app.route('/alter', methods=["GET", "POST"])
 def alter_table():
     if request.method == 'GET':
         return render_template('alter_table.html')
     elif request.method == 'POST':
-        _do_alter_table(request.form)
+        return _do_alter_table(request.form)
 
 #dml
 
 @app.route('/select', methods=["GET", "POST"])
 def select_table():
     if request.method == 'GET':
-        return render_template('select_table.html')
+#    по хорошему лучше юзеру дать инфу какие таблицы есть
+#    для этого можно сделать запрос и получить инфу о таблциах
+        # tables = {"table_name": ["table_column1", "table_column1", ]}
+        # по скольку мы рендерим имя таблицы только для гет запроса после пост запроса эти жанные теряются
+        # надо делать чутка иначе
+        return render_template('select.html', **get_tables())
     elif request.method == 'POST':
-        _do_select(request.form)
+        return _do_select(request.form)
 
 @app.route('/update', methods=["GET", "POST"])
 def update_table():
     if request.method == 'GET':
         return render_template('update_table.html')
     elif request.method == 'POST':
-        _do_update(request.form)
+        return _do_update(request.form)
 
 @app.route('/delete', methods=["GET", "POST"])
 def delete_table():
     if request.method == 'GET':
         return render_template('delete.html')
     elif request.method == 'POST':
-        _do_delete(request.form)
+        return _do_delete(request.form)
 
 @app.route('/insert', methods=["GET", "POST"])
 def insert_table():
     if request.method == 'GET':
         return render_template('insert_table.html')
     elif request.method == 'POST':
-        _do_insert(request.form)
+        return _do_insert(request.form)
 
 #others
+
+def get_tables():
+    table_columns = {}
+    raw_result = dal.select("SELECT table_name FROM information_schema.tables WHERE table_schema = 'flask_user';")
+    table_names = make_flat(raw_result)
+    for table in table_names:
+        columns_raw = dal.select(f"SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'flask_user' AND TABLE_NAME = '{table}';")
+        table_columns[table] = make_flat(columns_raw)
+    return {"table_names":table_names, "table_columns": table_columns}
+
+def make_flat(list_of_list):
+    return [column for row in list_of_list for column in row]
 
 def _do_create_table(form_data: Dict):
     table_name:str = form_data["table_name"]
@@ -105,7 +122,7 @@ def _do_alter_table(form_data: Dict):
 
 def _do_select(form_data: Dict):
     table_name:str = form_data["table_name"]
-    column_names:list = form_data["column_names"]
+    column_names:list = [ col.strip() for col in form_data["column_names"].split(",")]
     condition:str = form_data["condition"]
     if len(condition)>0:
         query = _sql_translator.select_sql(table_name,column_names,condition)
@@ -113,7 +130,7 @@ def _do_select(form_data: Dict):
         query = _sql_translator.select_sql(table_name,column_names)
     try:
         result = dal.select(query)
-        return render_template('select.html',results=result)
+        return render_template('select.html',select_results=result, sql_query=query, **get_tables())
     except BaseException as error:
         return handle_error(error)
 
