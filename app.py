@@ -173,7 +173,7 @@ def _do_insert(form_data: Dict):
 
 
 def handle_success(query):
-    return render_template("success.html")
+    return render_template("success.html", query = query)
 
 def handle_error(error: BaseException):
     return f"<h1 >{error}</h1>"
