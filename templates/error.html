@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+
+{% block title %}Ошибка{% endblock %}
+
+{% block head %}
+  {{ super() }}
+{% endblock %}
+
+{% block content %}
+<h2 class='pt-md-5'>Ошибка: {{error}} <br>:(</h2>
+{% endblock %}

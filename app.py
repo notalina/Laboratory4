@@ -176,8 +176,7 @@ def handle_success(query):
     return render_template("success.html", query = query)
 
 def handle_error(error: BaseException):
-    #TODO: replace to template
-    return f"<h1 >{error}</h1>"
+    return render_template("error.html",error=error)
 
 if __name__ == "__main__":
     app.run(debug=True)
