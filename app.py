@@ -157,8 +157,8 @@ def _do_delete(form_data: Dict):
 
 def _do_insert(form_data: Dict):
     table_name:str = form_data["table_name"]
-    columns:list = form_data["column_names"]
-    values:list = form_data["values"]
+    columns:list = [ col.strip() for col in form_data["column_names"].split(",")]
+    values:list = [col.strip() for col in form_data["values"].split(",")]
     query = _sql_translator.insert_sql(table_name,columns,values)
     try:
         dal.insert(query)
