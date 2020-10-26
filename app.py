@@ -26,14 +26,14 @@ def create_table():
 @app.route('/drop', methods=["GET", "POST"])
 def drop_table():
     if request.method == 'GET':
-        return render_template('drop_table.html')
+        return render_template('drop_table.html',**get_tables())
     elif request.method == 'POST':
         return _do_drop_table(request.form)
 
 @app.route('/alter', methods=["GET", "POST"])
 def alter_table():
     if request.method == 'GET':
-        return render_template('alter_table.html')
+        return render_template('alter_table.html',**get_tables())
     elif request.method == 'POST':
         return _do_alter_table(request.form)
 

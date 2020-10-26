@@ -11,8 +11,13 @@
     <form id="alter_table_form" action="/alter" method="POST">
         <div class="inputs">
             <div class="row ">
-                <div class="col">
-                    <input type="text" class="form-control" name="table_name" placeholder="Имя таблицы">
+                <div class="form-group">
+                    <label for="tableNames">Имя таблицы</label>
+                    <select class="form-control" name="table_name" id="tableNames">
+                        {% for table in table_names %}
+                        <option>{{ table }}</option>
+                        {% endfor %}
+                    </select>
                 </div>
                 <div class="col">
                     <input type="text" class="form-control" name="condition" placeholder="Условие">
@@ -20,7 +25,7 @@
             </div>
         </div>
         <div>
-            <button type="submit" class="btn btn-primary">Выполнить запрос</button>
+            <button type="submit" class="btn btn-primary">Выполнить</button>
         </div>
     </form>
 </div>

@@ -8,13 +8,17 @@
 
 {% block content %}
 <div>
-    <form id="drop_table_form" action="/drop" method="POST">
+    <form id="drop_table_form" action="/drop" method="POST" class="m-b-20">
         <div class="form-group">
-            <label for="tableName">Имя таблицы</label>
-            <input type="text" class="form-control" id="tableName" name="table_name" aria-describedby="emailHelp">
+            <label for="tableNames">Имя таблицы</label>
+            <select class="form-control" name="table_name" id="tableNames">
+                {% for table in table_names %}
+                <option>{{ table }}</option>
+                {% endfor %}
+            </select>
         </div>
         <div>
-            <button type="submit" class="btn btn-primary">Выполнить запрос</button>
+            <button type="submit" class="btn btn-primary">Удалить таблицу</button>
         </div>
     </form>
 </div>
