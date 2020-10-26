@@ -8,19 +8,22 @@
 
 {% block content %}
 <div>
-    <form id="alter_table_form" action="/alter" method="POST">
+    <form id="alter_table_form" action="/alter" method="POST" class='pt-md-5'>
         <div class="inputs">
             <div class="row ">
-                <div class="form-group">
-                    <label for="tableNames">Имя таблицы</label>
-                    <select class="form-control" name="table_name" id="tableNames">
-                        {% for table in table_names %}
-                        <option>{{ table }}</option>
-                        {% endfor %}
-                    </select>
+                <div class="col">
+                    <div class="form-group">
+                        <label for="tableNames">Имя таблицы</label>
+                        <select class="form-control" name="table_name" id="tableNames">
+                            {% for table in table_names %}
+                            <option>{{ table }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
                 </div>
                 <div class="col">
-                    <input type="text" class="form-control" name="condition" placeholder="Условие">
+                    <label for="tableNames">Условие</label>
+                    <input type="text" class="form-control" name="condition">
                 </div>
             </div>
         </div>

@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+
+{% block title %}UPDATE{% endblock %}
+
+{% block head %}
+  {{ super() }}
+{% endblock %}
+
+{% block content %}
+
+<div class='pt-md-5'>
+    <form id="update_table_form" action="/update" method="POST">
+        <div class="form-group">
+            <label for="tableName">Имя таблицы</label>
+            <select class="form-control" name="table_name" id="tableNames">
+                {% for table in table_names %}
+                <option>{{ table }}</option>
+                {% endfor %}
+            </select>
+            <div class="pt-md-2">
+                <input type="text" class="form-control" name="condition" placeholder="Условие">
+            </div>
+        </div>
+        <div class="inputs">
+            <div class="row pt-md-2">
+                <div class="col">
+                    <input type="text" class="form-control" name="column_names[0]" placeholder="Имя столбца">
+                </div>
+                <div class="col">
+                    <input type="text" class="form-control" name="column_values[0]" placeholder="Новое значение">
+                </div>
+            </div>
+        </div>
+        <input type="hidden" id="column_amount" name="column_amount" value="1">  
+        <div class='pt-sm-2'>
+            <button id="add_column_button" type="button" class="btn btn-link">Добавить столбец</button>
+        </div>
+        <div class='pt-sm-2'>
+            <button type="submit" class="btn btn-primary">Обновить таблицу</button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

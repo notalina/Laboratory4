@@ -64,10 +64,20 @@ def test_create_translator():
     expected = "CREATE TABLE table1 (column1 INTEGER, column2 STRING);"
     assert actual == expected
 
-def test_mysql_db_select():
+def test_mysql_db_connect():
     dal = data_access_layer.DataAccessLayer("localhost", 3306, "flask_user", "flask_user", "flask_user")
     results = dal.select("SELECT * FROM persons;")
     assert len(results) > 0
 
 if __name__ == "__main__":
+    test_sql_select_tranlator()
+    test_sql_select_tranlator_1()
+    test_delete_translator()
+    test_delete_translator_1()
+    test_insert_translator()
+    test_update_translator()
+    test_update_translator_1()
+    test_drop_translator()
+    test_alter_translator()
     test_create_translator()
+    test_mysql_db_connect()

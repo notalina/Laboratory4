@@ -7,5 +7,26 @@
 {% endblock %}
 
 {% block content %}
-<h1 class="display-4 text-md-left">Нужно придумать что сюда написать</h1>
+<h1 class="display-4 text-md-left">Добро поджаловть в лабу алины</h1>
+<div class="jumbotron p-t-20">
+  <h2>Список таблиц</h2>
+  {% if table_names is defined and table_names|length > 0 %}
+  <ul>
+    {% for table_name in table_names %}
+      <li>
+        <strong>{{ table_name }}</strong>
+        <ul>
+          {% for column_name in table_columns[table_name] %}
+            <li>
+              <i>{{ column_name }}</i>
+            </li>
+          {% endfor %}
+        </ul>
+      </li>
+      {% endfor %}
+  </ul>
+  {% else %}
+    <h3>Пусто</h3>
+  {% endif%}
+</div>
 {% endblock %}
