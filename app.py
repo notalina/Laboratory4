@@ -1,4 +1,3 @@
-import time
 from flask import Flask, render_template, request, redirect
 import pymysql 
 from typing import Dict
