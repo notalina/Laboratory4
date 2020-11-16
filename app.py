@@ -21,6 +21,8 @@ user_cache = {}
 @auth.verify_password
 def verify_password(username, password):
     try:
+        if username == '':
+            return False
         if username in user_cache:
             return username
         logger.info("DB Authentification attempt")
@@ -43,21 +45,21 @@ def db_info(db_name):
     return render_template('index.html', **get_schema_information(db_name))
 
 #ddl
-@app.route("/create_db", methods=["GET","POST"])
-@auth.login_required
-def create_db():
-    if request.method == 'GET':
-        return render_template('create_database.html', **get_databases_list())
-    elif request.method == 'POST':
-        return _do_create_db(request.form)
+# @app.route("/create_db", methods=["GET","POST"])
+# @auth.login_required
+# def create_db():
+#     if request.method == 'GET':
+#         return render_template('create_database.html', **get_databases_list())
+#     elif request.method == 'POST':
+#         return _do_create_db(request.form)
 
-@app.route("/drop_db", methods=["GET","POST"])
-@auth.login_required
-def create_db():
-    if request.method == 'GET':
-        return render_template('drop_database.html', **get_databases_list())
-    elif request.method == 'POST':
-        return _do_drop_db(request.form)
+# @app.route("/drop_db", methods=["GET","POST"])
+# @auth.login_required
+# def drop_db():
+#     if request.method == 'GET':
+#         return render_template('drop_database.html', **get_databases_list())
+#     elif request.method == 'POST':
+#         return _do_drop_db(request.form)
 
 
 @app.route('/<db_name>/create', methods=["GET", "POST"])
@@ -120,7 +122,7 @@ def insert_table(db_name):
 
 #others
 def get_databases_list():
-    table_columns = {}
+    #table_columns = {}
     raw_result = get_current_user_dal().select(f"SELECT schema_name FROM information_schema.schemata;")
     db_names = flat_map(raw_result)
     return {
