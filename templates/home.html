@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+
+{% block title %}Меню{% endblock %}
+
+{% block head %}
+  {{ super() }}
+{% endblock %}
+
+{% block content %}
+<h2 class="display-4 text-md-left">Лабораторная работа №5</h2>
+<div class="jumbotron">
+  <h2>Список БД</h2>
+  {% if db_names is defined and db_names|length > 0 %}
+  <ul>
+    {% for db_name in db_names %}
+      <li>
+        <a class="link white-text" href="/{{db_name}}/">{{ db_name }}</strong>
+      </li>
+      {% endfor %}
+  </ul>
+  {% else %}
+    <h3>Пусто</h3>
+  {% endif%}
+</div>
+{% endblock %}

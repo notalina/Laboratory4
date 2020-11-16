@@ -8,7 +8,7 @@
 
 {% block content %}
 
-<form action="/select" method="POST" id="selectFrom" class='pt-md-5'>
+<form action="/{{selected_db}}/select" method="POST" id="selectFrom" class='pt-md-5'>
     <div class="form-group">
         <label for="tableNames">Имя таблицы</label>
         <select class="form-control" name="table_name" id="tableNames">

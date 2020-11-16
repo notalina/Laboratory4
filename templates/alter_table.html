@@ -8,7 +8,7 @@
 
 {% block content %}
 <div>
-    <form id="alter_table_form" action="/alter" method="POST" class='pt-md-5'>
+    <form id="alter_table_form" action="/{{selected_db}}/alter" method="POST" class='pt-md-5'>
         <div class="inputs">
             <div class="row ">
                 <div class="col">

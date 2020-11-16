@@ -8,7 +8,7 @@
 
 {% block content %}
 <div class='pt-md-5'>
-    <form id="alter_table_form" action="/delete" method="POST">
+    <form id="alter_table_form" action="/{{selected_db}}/delete" method="POST">
         <div class="inputs">
             <div class="row ">
                 <div class="col">

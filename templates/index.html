@@ -7,9 +7,9 @@
 {% endblock %}
 
 {% block content %}
-<h2 class="display-4 text-md-left">Лабораторная работа №4</h2>
+<h2 class="display-4 text-md-left">Лабораторная работа №5</h2>
 <div class="jumbotron">
-  <h2>Список таблиц</h2>
+  <h2>Список таблиц в БД {{selected_db}}</h2>
   {% if table_names is defined and table_names|length > 0 %}
   <ul>
     {% for table_name in table_names %}

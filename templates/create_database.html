@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+
+{% block title %}CREATE DATABASE{% endblock %}
+
+{% block head %}
+  {{ super() }}
+{% endblock %}
+
+{% block content %}
+
+<div class='pt-md-5'>
+    <form id="alter_table_form" action="/create_db" method="POST">
+        <div class="inputs">
+            <div class="row ">
+                <div class="col">
+                    <input type="text" class="form-control" name="db_name" placeholder="Имя yj базы данных">
+                </div>
+            </div>
+        </div>
+        <div class='pt-md-2'>
+            <button type="submit" class="btn btn-primary">Создать</button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}
+

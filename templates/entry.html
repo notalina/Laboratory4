@@ -1,0 +1,26 @@
+{% extends "layout_without_navbar.html" %}
+
+{% block title %}Вход{% endblock %}
+
+{% block head %}
+  {{ super() }}
+{% endblock %}
+
+{% block content %}
+<h2 class="display-4 text-md-left">Лабораторная работа №5</h2>
+<div>
+    <div class="jumbotron">
+        <form action = "", method="POST">
+            <div class="form-group">
+                <label>Логин</label>
+                <input class="form-control" name = "login" placeholder="Логин">
+            </div>
+            <div class="form-group">
+                <label for="exampleInputPassword1">Пароль</label>
+                <input type="password" class="form-control" id="exampleInputPassword1" name = "password" placeholder="Пароль">
+            </div>
+            <button type="submit" class="btn btn-primary">Войти</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

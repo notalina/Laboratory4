@@ -7,7 +7,8 @@ class DataAccessLayer:
         self.db_name = db_name
         self.db_user = db_user
         self.db_user_password = db_user_password
-        
+        #даже если так разве мы не можем потом просто узнать имя нужной бд?
+        # вроде как драйвер позволяет цеплятся без указания конкретной БД.
     def get_connection(self):
         try: 
             connection = pymysql.connect(host=self.db_host, 
@@ -72,6 +73,28 @@ class DataAccessLayer:
     #DDL
 
     def create(self, create_query: str):
+        try:
+            connection = self.get_connection()
+            with connection.cursor() as cursor:
+                cursor.execute(create_query)
+        except pymysql.MySQLError as e:
+            print(f"Error execute create query {create_query} to MySQL", e)
+            raise
+        finally:
+            connection.close()
+
+    def create_db(self, create_query: str):
+        try:
+            connection = self.get_connection()
+            with connection.cursor() as cursor:
+                cursor.execute(create_query)
+        except pymysql.MySQLError as e:
+            print(f"Error execute create query {create_query} to MySQL", e)
+            raise
+        finally:
+            connection.close()
+
+    def drop_db(self, create_query: str):
         try:
             connection = self.get_connection()
             with connection.cursor() as cursor:

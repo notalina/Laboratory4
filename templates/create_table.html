@@ -9,7 +9,7 @@
 {% block content %}
 
 <div class='pt-md-5'>
-    <form id="create_table_form" action="/create" method="POST">
+    <form id="create_table_form" action="/{{selected_db}}/create" method="POST">
         <div class="form-group">
             <label for="tableName">Имя таблицы</label>
             <input type="text" class="form-control" id="tableName" name="table_name" aria-describedby="emailHelp">

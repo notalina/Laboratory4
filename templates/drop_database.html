@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% block title %}DROP TABLE{% endblock %}
+{% block title %}DROP DATABASE{% endblock %}
 
 {% block head %}
   {{ super() }}
@@ -8,12 +8,12 @@
 
 {% block content %}
 <div class='pt-md-5'>
-    <form id="drop_table_form" action="/{{selected_db}}/drop" method="POST" class="m-b-20">
+    <form id="drop_table_form" action="/drop_database" method="POST" class="m-b-20">
         <div class="form-group">
-            <label for="tableNames">Имя таблицы</label>
-            <select class="form-control" name="table_name" id="tableNames">
-                {% for table in table_names %}
-                <option>{{ table }}</option>
+            <label>Имя базы данных</label>
+            <select class="form-control" name="db_name" id="tableNames">
+                {% for db in db_names %}
+                <option>{{ db }}</option>
                 {% endfor %}
             </select>
         </div>
