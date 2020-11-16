@@ -5,48 +5,41 @@ import sql_translator
 from data_access_layer import DataAccessLayer
 import logging
 from flask_httpauth import HTTPBasicAuth
+from datetime import timedelta
+from auth import authentication as authentication_blueprint
+from auth import requires_authorization,SESSION_USER_KEY, USER_TO_DAL
 
-_sql_translator = sql_translator.SqlTranslator()
 
 
 logging.basicConfig(format='%(asctime)s [%(levelname)s] %(name)s: %(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S',
                     level=logging.INFO)
 logger = logging.getLogger("Main")
-app = Flask(__name__)
-auth = HTTPBasicAuth()
 
-user_cache = {}
- 
-@auth.verify_password
-def verify_password(username, password):
-    try:
-        if username == '':
-            return False
-        if username in user_cache:
-            return username
-        logger.info("DB Authentification attempt")
-        session['username'] = DataAccessLayer("localhost", 3306, None, username, password)
-        return username
-    except:
-        logger.warning("Failed to authorizate as %s", username)
-        return False
+
+app = Flask(__name__)
+app.secret_key="alina"
+app.permanent_session_lifetime = timedelta(minutes=5)
+app.register_blueprint(authentication_blueprint)
+
+
+_sql_translator = sql_translator.SqlTranslator()
 
 
 @app.route('/', methods=["GET", "POST"])
-@auth.login_required
+@requires_authorization
 def index():
     return render_template('home.html', **get_databases_list())
 
 
 @app.route('/<db_name>/', methods=["GET", "POST"])
-@auth.login_required
+@requires_authorization
 def db_info(db_name):
     return render_template('index.html', **get_schema_information(db_name))
 
 #ddl
 @app.route("/create_db", methods=["GET","POST"])
-@auth.login_required
+@requires_authorization
 def create_db():
     if request.method == 'GET':
         return render_template('create_database.html', **get_databases_list())
@@ -54,7 +47,7 @@ def create_db():
         return _do_create_db(request.form)
 
 @app.route("/drop_db", methods=["GET","POST"])
-@auth.login_required
+@requires_authorization
 def drop_db():
     if request.method == 'GET':
         return render_template('drop_database.html', **get_databases_list())
@@ -63,7 +56,7 @@ def drop_db():
 
 
 @app.route('/<db_name>/create', methods=["GET", "POST"])
-@auth.login_required
+@requires_authorization
 def create_table(db_name):
     if request.method == 'GET':
         return render_template('create_table.html', **get_schema_information(db_name))
@@ -71,7 +64,7 @@ def create_table(db_name):
         return _do_create_table(db_name, request.form)
 
 @app.route('/<db_name>/drop', methods=["GET", "POST"])
-@auth.login_required
+@requires_authorization
 def drop_table(db_name):
     if request.method == 'GET':
         return render_template('drop_table.html',**get_schema_information(db_name))
@@ -79,7 +72,7 @@ def drop_table(db_name):
         return _do_drop_table(db_name, request.form)
 
 @app.route('/<db_name>/alter', methods=["GET", "POST"])
-@auth.login_required
+@requires_authorization
 def alter_table(db_name):
     if request.method == 'GET':
         return render_template('alter_table.html',**get_schema_information(db_name))
@@ -89,7 +82,7 @@ def alter_table(db_name):
 #dml
 
 @app.route('/<db_name>/select', methods=["GET", "POST"])
-@auth.login_required
+@requires_authorization
 def select_table(db_name):
     if request.method == 'GET':
         return render_template('select.html', **get_schema_information(db_name))
@@ -97,7 +90,7 @@ def select_table(db_name):
         return _do_select(db_name, request.form)
 
 @app.route('/<db_name>/update', methods=["GET", "POST"])
-@auth.login_required
+@requires_authorization
 def update_table(db_name):
     if request.method == 'GET':
         return render_template('update.html', **get_schema_information(db_name))
@@ -105,7 +98,7 @@ def update_table(db_name):
         return _do_update(db_name, request.form)
 
 @app.route('/<db_name>/delete', methods=["GET", "POST"])
-@auth.login_required
+@requires_authorization
 def delete_table(db_name):
     if request.method == 'GET':
         return render_template('delete.html', **get_schema_information(db_name))
@@ -113,7 +106,7 @@ def delete_table(db_name):
         return _do_delete(db_name, request.form)
 
 @app.route('/<db_name>/insert', methods=["GET", "POST"])
-@auth.login_required
+@requires_authorization
 def insert_table(db_name):
     if request.method == 'GET':
         return render_template('insert.html', **get_schema_information(db_name))
@@ -249,8 +242,8 @@ def _do_insert(db_name, form_data: Dict):
         return handle_error(error)
 
 def get_current_user_dal() -> DataAccessLayer :
-    return user_cache[auth.current_user()
-]
+    current_username = session[SESSION_USER_KEY]
+    return USER_TO_DAL[current_username]
 
 
 def handle_success(query):

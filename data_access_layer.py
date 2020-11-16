@@ -16,7 +16,6 @@ class DataAccessLayer:
                                         user=self.db_user,
                                         password=self.db_user_password)    
             connection.autocommit(True)     
-            # select curdate from dual;
         except pymysql.MySQLError as e:
             print("Error while connecting to MySQL", e)
             raise
