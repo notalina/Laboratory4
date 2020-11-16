@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, session
 import pymysql 
 from typing import Dict
 import sql_translator
@@ -26,7 +26,7 @@ def verify_password(username, password):
         if username in user_cache:
             return username
         logger.info("DB Authentification attempt")
-        user_cache[username] = DataAccessLayer("localhost", 3306, None, username, password)
+        session['username'] = DataAccessLayer("localhost", 3306, None, username, password)
         return username
     except:
         logger.warning("Failed to authorizate as %s", username)
@@ -45,21 +45,21 @@ def db_info(db_name):
     return render_template('index.html', **get_schema_information(db_name))
 
 #ddl
-# @app.route("/create_db", methods=["GET","POST"])
-# @auth.login_required
-# def create_db():
-#     if request.method == 'GET':
-#         return render_template('create_database.html', **get_databases_list())
-#     elif request.method == 'POST':
-#         return _do_create_db(request.form)
+@app.route("/create_db", methods=["GET","POST"])
+@auth.login_required
+def create_db():
+    if request.method == 'GET':
+        return render_template('create_database.html', **get_databases_list())
+    elif request.method == 'POST':
+        return _do_create_db(request.form)
 
-# @app.route("/drop_db", methods=["GET","POST"])
-# @auth.login_required
-# def drop_db():
-#     if request.method == 'GET':
-#         return render_template('drop_database.html', **get_databases_list())
-#     elif request.method == 'POST':
-#         return _do_drop_db(request.form)
+@app.route("/drop_db", methods=["GET","POST"])
+@auth.login_required
+def drop_db():
+    if request.method == 'GET':
+        return render_template('drop_database.html', **get_databases_list())
+    elif request.method == 'POST':
+        return _do_drop_db(request.form)
 
 
 @app.route('/<db_name>/create', methods=["GET", "POST"])
@@ -254,6 +254,13 @@ def get_current_user_dal() -> DataAccessLayer :
 
 
 def handle_success(query):
+    # вот тут у тебя не хватает информации о бд в которой был запрос
+    # либо надо его пробрасывать и сюда либо из  success.html убрать все ссылки ну и чтобы оно не наследовалось от layout.html
+    # проще сделать первое
+    # есть еще супер варик сделать в шапке dropdown
+    # какая там выбрана БД в такой и делаются запросы
+    # пока делай авторизацию через сессии как в видео
+    # далее сделаем такую вот фичу
     return render_template("success.html", query = query)
 
 def handle_error(error: BaseException):

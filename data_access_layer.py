@@ -7,8 +7,7 @@ class DataAccessLayer:
         self.db_name = db_name
         self.db_user = db_user
         self.db_user_password = db_user_password
-        #даже если так разве мы не можем потом просто узнать имя нужной бд?
-        # вроде как драйвер позволяет цеплятся без указания конкретной БД.
+
     def get_connection(self):
         try: 
             connection = pymysql.connect(host=self.db_host, 
@@ -17,6 +16,7 @@ class DataAccessLayer:
                                         user=self.db_user,
                                         password=self.db_user_password)    
             connection.autocommit(True)     
+            # select curdate from dual;
         except pymysql.MySQLError as e:
             print("Error while connecting to MySQL", e)
             raise
